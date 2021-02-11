@@ -1,16 +1,20 @@
-function duplicateLetters(...args) {
-  let str = args[0];
-  let count = 0;
+function duplicateLetters(str) {
+  if (!str) return false;
 
-  for (let i = 0; i < str.length; i++) {
-    let a = 0;
-    for(let j = i; j < str.length; j++){
-      if(str[i] == str[j]) a++;
-    }
-    if (a > count) count = a;
+  let strSplit = str.split('');
+
+  let chars = {}
+  for (let ch of strSplit) {
+    if (chars[ch]) chars[ch] += 1;
+    else chars[ch] = 1;
   }
 
-  return count > 1 ? count : false;
+  let charValues = Object.values(chars);
+
+  let maxCount = Math.max(...charValues);
+  if (!maxCount || maxCount == 1) return false;
+
+  return maxCount;
 }
 
 export {
