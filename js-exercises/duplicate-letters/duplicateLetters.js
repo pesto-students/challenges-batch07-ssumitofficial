@@ -1,10 +1,8 @@
 function duplicateLetters(str) {
   if (!str) return false;
 
-  let strSplit = str.split('');
-
   let chars = {}
-  for (let ch of strSplit) {
+  for (let ch of str) {
     if (chars[ch]) chars[ch] += 1;
     else chars[ch] = 1;
   }

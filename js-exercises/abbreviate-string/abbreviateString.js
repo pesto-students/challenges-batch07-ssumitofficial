@@ -3,7 +3,7 @@ function abbreviateString(str) {
 
     let splitArr = str.split(' ');
     if(splitArr.length > 1)
-        return splitArr[0] + ' ' + splitArr[splitArr.length - 1][0].toUpperCase() + '.';
+        return `${splitArr[0]} ${splitArr[splitArr.length - 1][0].toUpperCase()}.`;
     
     return str;
 }
