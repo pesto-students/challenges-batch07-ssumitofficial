@@ -3,8 +3,7 @@ function balancedBraces(str) {
   const closeBraces = [")", "]", "}"];
   const stack = [];
 
-  for (let i = 0; i < str.length; i++) {
-    const ch = str[i];
+  for (const ch of str) {
 
     if (openBraces.includes(ch)) {
       stack.push(ch);
