@@ -1,84 +1,57 @@
 class Cycled {
     constructor(cyclingList) {
+        if (!Array.isArray(cyclingList)) {
+            throw new Error(`Expected ${cyclingList} to be an Array.`);
+        }
         this.cyclingList = cyclingList;
-        this.currentValue = 0;
-        this.currentIndex = 0;
-    }
-
-    get index() {
-        return this.currentIndex;
-    }
-    
-    set index(value) {
-        if(value == -1){
-            this.currentIndex = 2;
-        }
-        else if(value == 3){
-            this.currentIndex = 0;
-        }
-        else if(value > 3 || value < 0){
-            this.currentIndex =  Math.abs(Math.ceil(value % 3)) + 1;
-        }
-        else {
-            this.currentIndex = value;
-        }
+        this.length = cyclingList.length;
+        this._index = 0;
     }
 
     current() {
-        return this.cyclingList[this.index];
+        return this.step(0);
     }
 
     next() {
-        this.index += 1;
-        return this.cyclingList[this.index];
+        return this.step(1);
     }
 
     previous() {
-        this.index -= 1;
-        return this.cyclingList[this.index];
+        return this.step(-1);
     }
 
-    step(stepValue) {
-        this.index += stepValue;
-        return this.cyclingList[this.index];
-    }
-
-    reversed() {
-        return new Cycled(this.cyclingList.reverse());
+    step(n) {
+        this._index = (this._index + n + this.length) % this.length;
+        return this.cyclingList[this._index];
     }
 
     indexOf(value) {
-        for (let i = 0; i < this.cyclingList.length; i += 1) {
-            if (this.cyclingList[i] === value) {
-                return i;
-            }
-        }
-        return -1;
+        return this.cyclingList.indexOf(value);
     }
 
-    [Symbol.iterator]() {
-        const [index, cyclingList] = this;
+    *[Symbol.iterator]() {
+        let length = this.length;
+        let newIndex = this._index;
+        while (length > 0) {
+            yield this.cyclingList[newIndex];
+            newIndex = (newIndex + 1) % this.cyclingList.length;
+            length -= 1;
+        }
+    }
 
-        const iteratorObj = {
-            counter: 0,
-            next() {
-                let result = {};
-                if (this.currentPosition < 0) {
-                    this.index = cyclingList.length - 1;
-                }
-                if (index >= cyclingList.length) {
-                    this.index = 0;
-                }
-                result = { done: false, value: cyclingList[index] };
-                this.counter += 1;
-                this.index += 1;
-                if (this.counter < 3) {
-                    return result;
-                }
-                return { done: true };
-            },
+    get reversed() {
+        const _this = this;
+        return function* () {
+            yield _this.previous();
         };
-        return iteratorObj;
+    }
+
+    get index() {
+        return this._index;
+    }
+
+    set index(value) {
+        this._index = ((value % this.length) + this.length) % this.length;
     }
 }
 
